@@ -344,7 +344,9 @@ class _KeyphraseVectorizerMixin():
         if not custom_pos_tagger:
             nlp.max_length = max([len(doc) for doc in document_list]) + 100
 
-        cp = nltk.RegexpParser('CHUNK: {(' + pos_pattern + ')}')
+        if not pos_pattern.startswith("CHUNK:"):
+            pos_pattern = 'CHUNK: {(' + pos_pattern + ')}'
+        cp = nltk.RegexpParser(pos_pattern)
         if not custom_pos_tagger:
             pos_tuples = []
             for tagged_doc in nlp.pipe(document_list, n_process=workers):
